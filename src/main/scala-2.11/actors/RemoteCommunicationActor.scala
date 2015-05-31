@@ -1,24 +1,17 @@
 package actors
 
-import java.io.File
 import java.util.UUID
 
 import actors.FileTransmittingActor.StartListening
-import actors.FolderActor.Answer
-import actors.FolderActor.Command
-import actors.FolderActor.Query
 import actors.FolderActor._
 import actors.RemoteCommunicationActor._
 import akka.actor._
-import akka.remote.RemoteScope
 import akka.pattern.ask
-import akka.stream.ActorFlowMaterializer
+import akka.remote.RemoteScope
 import akka.util.Timeout
-import akka.stream.scaladsl._
-import domain.FileChanged
-import domain.Types.{FolderPathAbs, FolderId, FolderContent}
+import domain.Types.{FolderContent, FolderId, FolderPathAbs}
+
 import scala.concurrent.duration._
-import scala.concurrent.ExecutionContext.Implicits._
 
 case class TransferFeedback(bytesSent: Long, totalBytes: Long)
 
@@ -42,14 +35,14 @@ object RemoteCommunicationActor {
 }
 
 class RemoteCommunicationActor extends Actor with ActorLogging {
-  val comHub = self.path.name.toString
+  val comHub = self.path.name
 
   private var folderActors = Map[FolderId, (FolderPathAbs, ActorRef)]()
 
   override def receive: Receive = {
     case WatchFolders(fs) => fs.foreach { case (id, folder) =>
       val ref = context.actorOf(FolderActor.props(id, folder), FolderActor.nameFromFolderId(id))
-      folderActors = folderActors + (id -> (folder, ref))
+      folderActors = folderActors + (id -> Tuple2(folder, ref))
 
       log.info(s"currently watching: $folderActors")
     }
@@ -57,7 +50,7 @@ class RemoteCommunicationActor extends Actor with ActorLogging {
     case FilesInFolder(remoteComHub, id, remoteFileChecksums) =>
       log.debug(s"received FilesInFolder $remoteFileChecksums from ${sender().actorRef}")
 
-      log.debug(s"telling folder actor to check diff")
+      log.debug("telling folder actor to check diff")
       folderActors.get(id).foreach(_._2 ! CheckFolderDiff(remoteComHub, remoteFileChecksums))
 
 

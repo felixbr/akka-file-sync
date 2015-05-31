@@ -1,17 +1,12 @@
 package stream
 
-import java.util.concurrent.{TimeUnit, CountDownLatch, ConcurrentLinkedQueue}
-
 import akka.actor.ActorContext
 import akka.event.Logging
 import akka.stream.stage._
 import domain.{FileEvent, StreamEvent, Tick}
 
 import scala.concurrent._
-import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.duration._
-import scala.util.{Failure, Success}
-import scala.collection.JavaConverters._
 
 object Debounce {
   def apply[A <: StreamEvent](delay: Duration)(implicit context: ActorContext): () => PushStage[A, A] = () => new Debounce[A](delay)

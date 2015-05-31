@@ -1,22 +1,18 @@
 package actors
 
-import java.io.File
-import java.net.InetAddress
-import java.nio.file.{Files, Path, Paths}
+import java.nio.file.{Path, Paths}
 
 import actors.FolderActor._
-import actors.RemoteCommunicationActor.{FolderChanged, FilesNeededFromRemote, BroadcastFileEvent, FileCreated}
+import actors.RemoteCommunicationActor.FilesNeededFromRemote
 import akka.actor._
 import akka.stream.ActorFlowMaterializer
 import akka.stream.scaladsl._
-import domain.Types.{FolderPathAbs, FolderId, FolderContent}
+import domain.Types.{FolderContent, FolderId, FolderPathAbs}
 import domain._
 import io.FileEventIterator
 import stream.Debounce
 import util.FolderUtils
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.duration._
 
 
@@ -50,7 +46,7 @@ class FolderActor(folderId: String, dir: String) extends Actor with ActorLogging
 
   val localIP = "127.0.0.1"
   val localAddress = Address("akka.tcp", "filesync", localIP, 2552)
-  val comHub = self.path.parent.name.toString
+  val comHub = self.path.parent.name
   println(s"$comHub: ${self.path}")
 
   startFileEventStream()
@@ -71,7 +67,7 @@ class FolderActor(folderId: String, dir: String) extends Actor with ActorLogging
         log.debug(s"remote files missing: $remoteFilesMissingLocal")
         context.parent ! FilesNeededFromRemote(remoteComHub, localAddress, folderId, remoteFilesMissingLocal)
       } else {
-        log.debug(s"no remote files are missing")
+        log.debug("no remote files are missing")
       }
 
     case FileExists(name, checksum) =>
@@ -83,7 +79,7 @@ class FolderActor(folderId: String, dir: String) extends Actor with ActorLogging
   }
 
   def broadcastFilesInFolder() = {
-    log.debug(s"sending broadcast: FilesInFolder")
+    log.debug("sending broadcast: FilesInFolder")
     context.actorSelection("akka://filesync/user/com*") ! FilesInFolder(comHub, folderId, FolderUtils.filesInDir(dir))
   }
 

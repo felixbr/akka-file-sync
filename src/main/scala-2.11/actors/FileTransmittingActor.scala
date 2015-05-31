@@ -3,28 +3,24 @@ package actors
 import java.io.File
 import java.net.InetSocketAddress
 import java.nio.file.Files
-import java.nio.file.attribute.{BasicFileAttributes, BasicFileAttributeView}
 
 import actors.FileTransmittingActor.{Listening, StartListening}
 import akka.actor._
-import akka.event.LoggingReceive
 import akka.io.Tcp.{Bind, _}
 import akka.io.{IO, Tcp}
-import akka.io.Tcp._
 import mixins.FolderLookup
 
 import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.Future
-import scala.util.{Success, Failure}
 
 object FileTransmittingActor {
   def props(folderId: String, relPath: String, comHub: String) = Props(new FileTransmittingActor(folderId, relPath, comHub))
 
   sealed trait Command
-  case class StartListening(receiverRef: ActorRef)
+  case class StartListening(receiverRef: ActorRef) extends Command
 
   sealed trait Answers
-  case class Listening(host: String, port: Int, fileSize: Long)
+  case class Listening(host: String, port: Int, fileSize: Long) extends Answers
 }
 
 class FileTransmittingActor(folderId: String, relPath: String, comHub: String) extends Actor with ActorLogging with FolderLookup {

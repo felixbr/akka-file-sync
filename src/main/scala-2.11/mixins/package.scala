@@ -1,16 +1,14 @@
-import actors.FolderActor
-import actors.RemoteCommunicationActor.{FolderPath, FolderFromId}
-import akka.actor.{Actor, ActorContext, ActorLogging, Address}
-import akka.pattern.{ask, AskTimeoutException}
+import actors.RemoteCommunicationActor.{FolderFromId, FolderPath}
+import akka.actor.{Actor, ActorContext, ActorLogging}
+import akka.pattern.{AskTimeoutException, ask}
 import akka.util.Timeout
 
 import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.util.{Failure, Success}
 
 
-package object mixins {
+package mixins {
   trait FolderLookup { this: Actor with ActorLogging =>
 
     def queryForLocalFolder(folderId: String, comHub: String)(implicit ctx: ActorContext): Future[String] = {

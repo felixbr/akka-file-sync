@@ -1,21 +1,18 @@
 package actors
 
-import java.io.{FileOutputStream, File}
+import java.io.{File, FileOutputStream}
 import java.net.InetSocketAddress
 
 import actors.FileTransmittingActor.Listening
 import akka.actor._
-import akka.event.LoggingReceive
 import akka.io.Tcp._
 import akka.io.{IO, Tcp}
-import akka.remote.RemoteScope
-import akka.stream.scaladsl._
 import akka.util.ByteString
 import mixins.FolderLookup
 
-import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 
 
 object FileReceivingActor {
@@ -73,7 +70,7 @@ class FileReceivingActor(folderId: String, relPath: String, comHub: String) exte
           fileOutStream.close()
 
         case _: ConnectionClosed =>
-          log.debug(s"connection closed")
+          log.debug("connection closed")
           fileOutStream.flush()
           fileOutStream.close()
           context stop self

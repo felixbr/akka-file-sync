@@ -1,6 +1,6 @@
 import java.nio.file.Path
 
-package object domain {
+package domain {
   object Types {
     type FolderId = String
     type FolderPathAbs = String
