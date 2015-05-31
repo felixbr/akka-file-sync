@@ -12,13 +12,13 @@ object Debounce {
   def apply[A <: StreamEvent](delay: Duration)(implicit context: ActorContext): () => PushStage[A, A] = () => new Debounce[A](delay)
 }
 
-class Debounce[A <: StreamEvent](delay: Duration)(implicit context: ActorContext) extends PushStage[A, A] {
-  val log = Logging(context.system, "Debounce")
+class Debounce[A <: StreamEvent](delay: Duration)(implicit ctx: ActorContext) extends PushStage[A, A] {
+  val log = Logging(ctx.system, "DebounceLogger")
 
   private var lastValue: Option[A] = None
   private var lastTimestamp: Long = 0
 
-  override def onPush(elem: A, ctx: Context[A]): Directive = elem.asInstanceOf[StreamEvent] match {
+  override def onPush(elem: A, ctx: Context[A]): SyncDirective = elem.asInstanceOf[StreamEvent] match {
     case _ if ctx.isFinishing =>
       lastValue.map(ctx.pushAndFinish).getOrElse(ctx.finish())
 
@@ -47,7 +47,7 @@ class Debounce[A <: StreamEvent](delay: Duration)(implicit context: ActorContext
 
   def resetCounter() = lastTimestamp = System.currentTimeMillis()
 
-  def pushValue(ctx: Context[A]): Directive = {
+  def pushValue(ctx: Context[A]): SyncDirective = {
     if (lastValue.isDefined) log.debug(s"pushing last value: $lastValue")
 
     val directive = lastValue.map(ctx.push).getOrElse(ctx.pull())
