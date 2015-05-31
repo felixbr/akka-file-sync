@@ -1,0 +1,15 @@
+app {
+  folders {
+    "root-share": "C:\\shared"
+  }
+
+  path1 = "C:\\watch_test"
+  path2 = "C:\\watch_test2"
+}
+
+akka {
+  seed-nodes = [
+    "akka.tcp://ClusterSystem@FelixDesktop:2552",
+    "akka.tcp://ClusterSystem@FELIXLAPTOP:2552"
+  ]
+}
