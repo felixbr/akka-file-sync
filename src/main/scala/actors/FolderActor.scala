@@ -39,6 +39,7 @@ object FolderActor {
   def nameFromFolderId(id: FolderId): String = s"$id-folderActor"
 }
 
+
 class FolderActor(folderId: String, dir: String) extends Actor with ActorLogging {
   implicit val mat = ActorFlowMaterializer()
 
