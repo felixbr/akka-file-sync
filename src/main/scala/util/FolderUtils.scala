@@ -1,6 +1,6 @@
 package util
 
-import java.io.{File, FileNotFoundException}
+import java.io.{ File, FileNotFoundException }
 import java.nio.file._
 import java.nio.file.attribute.BasicFileAttributes
 

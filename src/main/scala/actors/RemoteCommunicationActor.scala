@@ -53,7 +53,6 @@ class RemoteCommunicationActor extends Actor with ActorLogging {
       log.debug("telling folder actor to check diff")
       folderActors.get(id).foreach(_._2 ! CheckFolderDiff(remoteComHub, remoteFileChecksums))
 
-
     case f: FilesNeededFromRemote =>
       log.debug(s"FilesNeededFromRemote received on ${self.actorRef}")
       startTransferingRemoteFileToLocal(f)
@@ -78,8 +77,12 @@ class RemoteCommunicationActor extends Actor with ActorLogging {
     f.files.foreach { fileChecksum =>
       log.debug(s"Instantiating actors for file transmission for $fileChecksum")
       val receiverActor = context.actorOf(FileReceivingActor.props(f.folderId, fileChecksum.relPath, comHub), s"${UUID.randomUUID()}-receiver")
-      val transmitterActor = context.actorOf(FileTransmittingActor.props(f.folderId, fileChecksum.relPath, f.comHub)
-                                                                  .withDeploy(Deploy(scope = RemoteScope(f.location))), s"${UUID.randomUUID()}-transmitter")
+      val transmitterActor = context.actorOf(
+        FileTransmittingActor
+          .props(f.folderId, fileChecksum.relPath, f.comHub)
+          .withDeploy(Deploy(scope = RemoteScope(f.location))),
+        s"${UUID.randomUUID()}-transmitter"
+      )
 
       transmitterActor ! StartListening(receiverActor)
     }

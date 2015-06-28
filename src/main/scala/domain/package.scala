@@ -2,14 +2,13 @@ import java.nio.file.Path
 
 package domain {
   object Types {
-    type FolderId = String
-    type FolderPathAbs = String
+    type FolderId = String        // represents a label for a particular folder; e.g. "music"
+    type FolderPathAbs = String   // the absolute path for FolderId on a particular network node
 
-    type FolderContent = List[FileChecksum]
+    type FolderContent = Seq[FileChecksum]
   }
 
   case class FileChecksum(relPath: String, absPath: String, fileName: String, checksum: String)
-
 
   sealed trait StreamEvent
   case class FileEvent(eventType: FileEventType, filePath: Path, checksum: String) extends StreamEvent

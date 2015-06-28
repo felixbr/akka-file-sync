@@ -40,11 +40,11 @@ class FileEventIterator(dir: Path) extends Iterator[FileEvent] {
     }
   }
 
-  override def hasNext: Boolean = true  // YOLO
+  override def hasNext: Boolean = true // YOLO
 
   def pollNextEvents() = {
     val key = FileEventIterator.watcher.take()
-    queue.enqueue(key.pollEvents().asScala.toList:_*)
+    queue.enqueue(key.pollEvents().asScala.toList: _*)
 
     val valid = key.reset()
     if (!valid) {

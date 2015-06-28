@@ -3,7 +3,7 @@ package stream
 import akka.actor.ActorContext
 import akka.event.Logging
 import akka.stream.stage._
-import domain.{FileEvent, StreamEvent, Tick}
+import domain.{ FileEvent, StreamEvent, Tick }
 
 import scala.concurrent._
 import scala.concurrent.duration._
@@ -23,7 +23,7 @@ class Debounce[A <: StreamEvent](delay: Duration)(implicit ctx: ActorContext) ex
       lastValue.map(ctx.pushAndFinish).getOrElse(ctx.finish())
 
     case Tick =>
-//      log.debug(s"${System.currentTimeMillis() - lastTimestamp}")
+      //      log.debug(s"${System.currentTimeMillis() - lastTimestamp}")
       if (isOverDelayTime) {
         pushValue(ctx)
       } else {

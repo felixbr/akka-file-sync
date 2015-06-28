@@ -15,7 +15,6 @@ import util.FolderUtils
 
 import scala.concurrent.duration._
 
-
 object FolderActor {
   def props(folderId: FolderId, dir: FolderPathAbs) = Props(new FolderActor(folderId, dir))
 

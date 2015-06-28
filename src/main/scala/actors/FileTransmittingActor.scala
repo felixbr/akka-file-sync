@@ -26,14 +26,15 @@ object FileTransmittingActor {
 class FileTransmittingActor(folderId: String, relPath: String, comHub: String) extends Actor with ActorLogging with FolderLookup {
   implicit val system = context.system
 
-  val file: Future[File] = for (folderPath <- queryForLocalFolder(folderId, comHub);
-                                filePath = new File(folderPath).toPath.resolve(relPath))
-                                   yield {
-                                     log.debug(s"localFolder: $folderPath")
-                                     log.debug(s"relPath: $relPath")
-                                     log.debug(s"filePath: ${filePath.toString}")
-                                     new File(filePath.toString)
-                                   }
+  val file: Future[File] = for (
+    folderPath <- queryForLocalFolder(folderId, comHub);
+    filePath = new File(folderPath).toPath.resolve(relPath)
+  ) yield {
+    log.debug(s"localFolder: $folderPath")
+    log.debug(s"relPath: $relPath")
+    log.debug(s"filePath: ${filePath.toString}")
+    new File(filePath.toString)
+  }
 
   val fileSize: Future[Long] = file.map { file =>
     Files.readAttributes(file.toPath, "size").get("size").asInstanceOf[Long]
@@ -45,9 +46,10 @@ class FileTransmittingActor(folderId: String, relPath: String, comHub: String) e
 
   override def receive: Receive = {
     case StartListening(receiverRef) =>
-      for (f      <- file;
-           length <- fileSize) {
-
+      for (
+        f      <- file;
+        length <- fileSize
+      ) {
         log.debug(s"listening on $host:$port and waiting for $receiverRef")
         receiverRef ! Listening(host, port, length)
       }
@@ -59,8 +61,10 @@ class FileTransmittingActor(folderId: String, relPath: String, comHub: String) e
       val connection = sender()
       connection ! Register(handler)
 
-      for (f      <- file;
-           length <- fileSize) {
+      for (
+        f      <- file;
+        length <- fileSize
+      ) {
 
         log.info(s"writing file to wire: ${f.getAbsolutePath} ($length bytes)")
         connection ! Tcp.WriteFile(f.getAbsolutePath, 0, length, Tcp.NoAck)

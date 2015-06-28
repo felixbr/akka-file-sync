@@ -1,4 +1,4 @@
-import akka.actor.{Actor, ActorLogging}
+import akka.actor.{ Actor, ActorLogging }
 import akka.cluster.Cluster
 import akka.cluster.ClusterEvent._
 
@@ -21,8 +21,7 @@ class SimpleClusterListener extends Actor with ActorLogging {
     case UnreachableMember(member) =>
       log.info("Member detected as unreachable: {}", member)
     case MemberRemoved(member, previousStatus) =>
-      log.info("Member is Removed: {} after {}",
-        member.address, previousStatus)
+      log.info("Member is Removed: {} after {}", member.address, previousStatus)
     case _: MemberEvent => // ignore
   }
 }

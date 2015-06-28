@@ -2,7 +2,7 @@ package actors
 
 import akka.actor.{Actor, ActorLogging}
 
-class DelayActor(delay: Long) extends Actor with ActorLogging{
+class DelayActor(delay: Long) extends Actor with ActorLogging {
   private var lastMessageTimestamp: Option[Long] = None
   private var lastMessage: Option[AnyVal] = None
 
