@@ -4,19 +4,21 @@ version := "0.1"
 
 scalaVersion := "2.11.6"
 
+val akkaStableVersion = "2.3.11"
+val akkaExperimentalVersion = "1.0"
+
 libraryDependencies ++= Seq(
-  // "com.typesafe.akka" %% "akka-actor" % "2.3.11",
-  "com.typesafe.akka" %% "akka-contrib" % "2.3.11",
-  "com.typesafe.akka" %% "akka-testkit" % "2.3.11",
-  "com.typesafe.akka" %% "akka-remote" % "2.3.11",
-  "com.typesafe.akka" %% "akka-cluster" % "2.3.11",
-  "com.typesafe.akka" %% "akka-stream-experimental" % "1.0-RC3",
-  "com.typesafe.akka" %% "akka-http-experimental" % "1.0-RC3",
-  "com.typesafe.akka" %% "akka-http-core-experimental" % "1.0-RC3",
+  "com.typesafe.akka" %% "akka-contrib" % akkaStableVersion,
+  "com.typesafe.akka" %% "akka-testkit" % akkaStableVersion,
+  "com.typesafe.akka" %% "akka-remote" % akkaStableVersion,
+  "com.typesafe.akka" %% "akka-cluster" % akkaStableVersion,
+  "com.typesafe.akka" %% "akka-stream-experimental" % akkaExperimentalVersion,
+  "com.typesafe.akka" %% "akka-http-experimental" % akkaExperimentalVersion,
+  "com.typesafe.akka" %% "akka-http-core-experimental" % akkaExperimentalVersion,
 
   "com.google.guava" % "guava" % "18.0",
 
-  "org.scalatest" % "scalatest_2.11" % "2.1.6" % "test"
+  "org.scalatest" %% "scalatest" % "2.1.6" % "test"
 )
 
 scalacOptions ++= Seq(

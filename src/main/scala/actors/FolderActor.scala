@@ -5,7 +5,7 @@ import java.nio.file.{Path, Paths}
 import actors.FolderActor._
 import actors.RemoteCommunicationActor.FilesNeededFromRemote
 import akka.actor._
-import akka.stream.ActorFlowMaterializer
+import akka.stream.ActorMaterializer
 import akka.stream.scaladsl._
 import domain.Types.{FolderContent, FolderId, FolderPathAbs}
 import domain._
@@ -40,7 +40,7 @@ object FolderActor {
 
 
 class FolderActor(folderId: String, dir: String) extends Actor with ActorLogging {
-  implicit val mat = ActorFlowMaterializer()
+  implicit val mat = ActorMaterializer()
 
   log.info(s"folderActor startet for: $folderId -> $dir")
 

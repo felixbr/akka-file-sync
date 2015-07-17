@@ -1,12 +1,10 @@
 import actors.RemoteCommunicationActor
 import actors.RemoteCommunicationActor.WatchFolders
 import akka.actor.ActorSystem
-import akka.stream.ActorFlowMaterializer
 import config.Config
 
 object FileSyncApplication extends App {
   implicit lazy val system = ActorSystem("filesync")
-  implicit lazy val mat = ActorFlowMaterializer()
 
   val path1 = Config.config.getString("app.path1")
   val path2 = Config.config.getString("app.path2")
