@@ -4,7 +4,7 @@ version := "0.1"
 
 scalaVersion := "2.11.6"
 
-val akkaStableVersion = "2.3.11"
+val akkaStableVersion = "2.4-M2"
 val akkaExperimentalVersion = "1.0"
 
 libraryDependencies ++= Seq(
@@ -12,6 +12,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-testkit" % akkaStableVersion,
   "com.typesafe.akka" %% "akka-remote" % akkaStableVersion,
   "com.typesafe.akka" %% "akka-cluster" % akkaStableVersion,
+  "com.typesafe.akka" %% "akka-typed-experimental" % akkaStableVersion,
   "com.typesafe.akka" %% "akka-stream-experimental" % akkaExperimentalVersion,
   "com.typesafe.akka" %% "akka-http-experimental" % akkaExperimentalVersion,
   "com.typesafe.akka" %% "akka-http-core-experimental" % akkaExperimentalVersion,
